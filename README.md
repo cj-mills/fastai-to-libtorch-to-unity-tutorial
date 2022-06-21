@@ -1,2 +1,2 @@
-# fastai-to-libtorch-to-unity-tutorial
- This beginner tutorial covers creating a Libtorch plugin for the Unity game engine using an image classifier trained with the fastai library.
+# fastai to LibTorch to Unity tutorial
+This beginner tutorial covers creating a [Libtorch](https://pytorch.org/cppdocs/installing.html) plugin for the [Unity](https://unity.com/) game engine using an image classifier trained with the [fastai](https://docs.fast.ai/) library.
