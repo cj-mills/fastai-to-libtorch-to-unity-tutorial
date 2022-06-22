@@ -16,10 +16,9 @@ extern "C" {
 	int input_w = 224;
 	// The input height for the model
 	int input_h = 224;
-
-	c10::DeviceType device = at::kCPU;
-	torch::jit::script::Module network;
-	
+	// The current torchscript model
+	torch::jit::Module network;
+	// The current list of inputs
 	std::vector<torch::jit::IValue> inputs;
 
 	// Update the input dimensions
@@ -40,8 +39,6 @@ extern "C" {
 			return -1;
 		}
 
-		network.to(device);
-		
 		// Return a value of 0 if the model loads successfully
 		return 0;
 	}
@@ -77,7 +74,7 @@ extern "C" {
 			input[0][1] = input[0][1].div_(255.0f).sub_(0.456).div_(0.224);
 			input[0][2] = input[0][2].div_(255.0f).sub_(0.406).div_(0.225);
 			// Add input tensor to inputs vector
-			inputs.push_back(input.to(device));
+			inputs.push_back(input);
 			
 			// Perform inference and extract the predicted class index
 			class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
