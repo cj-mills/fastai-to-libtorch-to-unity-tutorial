@@ -60,6 +60,8 @@ public class ImageClassifierTorch : MonoBehaviour
     [Header("Libtorch")]
     [Tooltip("The name of the libtorch models folder")]
     public string modelsDir = "models";
+    [Tooltip("A list json files containing the normalization stats for available models")]
+    public TextAsset[] normalizationStatsList;
 
     // List of available webcam devices
     private WebCamDevice[] webcamDevices;
@@ -103,11 +105,13 @@ public class ImageClassifierTorch : MonoBehaviour
     private static extern void SetInputDims(int width, int height);
 
     [DllImport(dll)]
-    private static extern int LoadModel(string model);
+    private static extern int LoadModel(string model, float[] mean, float[] std);
 
     [DllImport(dll)]
     private static extern int PerformInference(IntPtr inputData);
 
+    // A class for reading in normalization stats from a JSON file
+    class NormalizationStats { public float[] mean; public float[] std; }
 
 
     /// <summary>
@@ -434,7 +438,7 @@ public class ImageClassifierTorch : MonoBehaviour
 
         // Send reference to inputData to DLL
         classIndex = UploadTexture(inputTextureCPU.GetRawTextureData());
-        Debug.Log($"Class Index: {classIndex}");
+        if (printDebugMessages) Debug.Log($"Class Index: {classIndex}");
 
         // Check if index is valid
         bool validIndex = classIndex >= 0 && classIndex < classes.Length;
@@ -477,8 +481,36 @@ public class ImageClassifierTorch : MonoBehaviour
     /// </summary>
     public void UpdateTorchScriptModel()
     {
+        string modelName = modelNames[modelDropdown.value];
+        float[] mean = new float[] { };
+        float[] std = new float[] { };
+
+        foreach (TextAsset textAsset in normalizationStatsList)
+        {
+            if (textAsset.name.Contains(modelName))
+            {
+                // Initialize the normalization stats from JSON file
+                mean = JsonUtility.FromJson<NormalizationStats>(textAsset.text).mean;
+                std = JsonUtility.FromJson<NormalizationStats>(textAsset.text).std;
+            }
+        }
+
+        if (mean.Length == 0)
+        {
+            Debug.Log("Unable to find normalization stats");
+            return;
+        }
+        {
+            string mean_str = "";
+            foreach (float val in mean) mean_str += $"{val} ";
+            Debug.Log($"Mean Stats: {mean_str}");
+            string std_str = "";
+            foreach (float val in std) std_str += $"{val} ";
+            Debug.Log($"Std Stats: {std_str}");
+        }
+
         // Load the specified torchscript model
-        int result = LoadModel(modelPaths[modelDropdown.value]);
+        int result = LoadModel(modelPaths[modelDropdown.value], mean, std);
         Debug.Log(result == 0 ? "Model loaded successfully" : "error loading the model");
     }
 
