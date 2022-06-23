@@ -13,13 +13,18 @@
 extern "C" {
 
 	// The input width for the model
-	int input_w = 224;
+	int input_w = 216;
 	// The input height for the model
-	int input_h = 224;
+	int input_h = 216;
 	// The current torchscript model
 	torch::jit::Module network;
 	// The current list of inputs
 	std::vector<torch::jit::IValue> inputs;
+
+	// The mean normalization stats for the current model
+	std::vector<float> mean_stats;
+	// The std normalization stats for the current model
+	std::vector<float> std_stats;
 
 	// Update the input dimensions
 	DLLExport void SetInputDims(int width, int height) {
@@ -28,11 +33,20 @@ extern "C" {
 	}
 
 	// Load a torchscript model from the specified file path
-	DLLExport int LoadModel(char* modelPath) {
+	DLLExport int LoadModel(char* modelPath, float mean[3], float std[3]) {
 
 		try {
 			// Deserialize the ScriptModule from a file using torch::jit::load().
 			network = torch::jit::load(modelPath);
+			network.eval();
+
+			mean_stats.clear();
+			std_stats.clear();
+
+			for (int i = 0; i < 3; i++) {
+				mean_stats.push_back(mean[i]);
+				std_stats.push_back(std[i]);
+			}			
 		}
 		catch (const c10::Error& e) {
 			// Return a value of -1 if the model fails to load
@@ -58,6 +72,8 @@ extern "C" {
 			// Store the pixel data for the source input image
 			cv::Mat texture = cv::Mat(input_h, input_w, CV_8UC4);
 
+			if (!texture.isContinuous()) { texture = texture.clone(); }
+
 			// Assign the inputData to the OpenCV Mat
 			texture.data = inputData;
 			// Remove the alpha channel
@@ -70,14 +86,21 @@ extern "C" {
 			// Permute tensor dimensions
 			input = input.permute({ 0, 3, 1, 2 });
 			// Scale and normalize color channel values
-			input[0][0] = input[0][0].div_(255.0f).sub_(0.485).div_(0.229);
-			input[0][1] = input[0][1].div_(255.0f).sub_(0.456).div_(0.224);
-			input[0][2] = input[0][2].div_(255.0f).sub_(0.406).div_(0.225);
+			input[0][0] = input[0][0].div_(255.0f).sub_(mean_stats[0]).div_(std_stats[0]);
+			input[0][1] = input[0][1].div_(255.0f).sub_(mean_stats[1]).div_(std_stats[1]);
+			input[0][2] = input[0][2].div_(255.0f).sub_(mean_stats[2]).div_(std_stats[2]);
 			// Add input tensor to inputs vector
 			inputs.push_back(input);
 			
-			// Perform inference and extract the predicted class index
-			class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
+			try {
+				// Perform inference and extract the predicted class index
+				class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
+			}
+			catch (...) {
+				class_idx = -2;
+			}
+
+			
 		}
 
 		return class_idx;
