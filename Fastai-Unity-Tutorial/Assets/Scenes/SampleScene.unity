@@ -1273,7 +1273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 709389918}
-  targetDim: 224
+  targetDim: 216
   processingShader: {fileID: 7200000, guid: 745d67b6609760d428fc14223a9e1e72, type: 3}
   useAsyncGPUReadback: 1
   classLabels: {fileID: 4900000, guid: ca9c0612bfd21b34bb1b0cec5f2417a1, type: 3}
@@ -1290,6 +1290,12 @@ MonoBehaviour:
   webcamDropdown: {fileID: 1408103628409930432}
   modelDropdown: {fileID: 354894624}
   modelsDir: models
+  normalizationStatsList:
+  - {fileID: 4900000, guid: ab761740a7929924ab2cbb06ec0e5801, type: 3}
+  - {fileID: 4900000, guid: 16b1f6ed00bbc3041af94f24d44e4d5a, type: 3}
+  - {fileID: 4900000, guid: 40194f830f4093742b359079ec8dffd6, type: 3}
+  - {fileID: 4900000, guid: 8e1e97ce7dde9ee4bbfc8c733e484973, type: 3}
+  - {fileID: 4900000, guid: 4668ee84ed6398046bd7cb36af54a567, type: 3}
 --- !u!114 &1531385794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1306,7 +1312,7 @@ MonoBehaviour:
   targetDim: 216
   processingShader: {fileID: 7200000, guid: 745d67b6609760d428fc14223a9e1e72, type: 3}
   processingMaterial: {fileID: 2100000, guid: 97218c13c96b8ab4eb6c8455a701b016, type: 2}
-  modelAsset: {fileID: 5022602860645237092, guid: 1e12dbbc75607644a9915500a7d6b10d, type: 3}
+  modelAsset: {fileID: 5022602860645237092, guid: fa47deaa038b61b41ac4ba953ac99b5e, type: 3}
   softmaxLayer: softmaxLayer
   argmaxLayer: argmaxLayer
   outputLayerIndex: 0
