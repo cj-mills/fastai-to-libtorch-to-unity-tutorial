@@ -17,10 +17,10 @@ public class ImageClassifierTorch : MonoBehaviour
     public int targetDim = 216;
     [Tooltip("The compute shader for GPU processing")]
     public ComputeShader processingShader;
-        
-    [Header("Output Processing")]
-    [Tooltip("Asynchronously download model output from the GPU to the CPU.")]
+    [Tooltip("Asynchronously download input image from the GPU to the CPU.")]
     public bool useAsyncGPUReadback = true;
+
+    [Header("Output Processing")]
     [Tooltip("A json file containing the class labels")]
     public TextAsset classLabels;
 
@@ -98,6 +98,9 @@ public class ImageClassifierTorch : MonoBehaviour
     // Names of the torchscript model
     private List<string> modelNames = new List<string>();
 
+    // A class for reading in normalization stats from a JSON file
+    class NormalizationStats { public float[] mean; public float[] std; }
+
     // Name of the DLL file
     const string dll = "Libtorch_CPU_Image_Classifier_DLL";
 
@@ -110,8 +113,7 @@ public class ImageClassifierTorch : MonoBehaviour
     [DllImport(dll)]
     private static extern int PerformInference(IntPtr inputData);
 
-    // A class for reading in normalization stats from a JSON file
-    class NormalizationStats { public float[] mean; public float[] std; }
+    
 
 
     /// <summary>
