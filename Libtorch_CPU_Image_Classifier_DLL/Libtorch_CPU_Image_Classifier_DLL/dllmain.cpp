@@ -99,8 +99,6 @@ extern "C" {
 			catch (...) {
 				class_idx = -2;
 			}
-
-			
 		}
 
 		return class_idx;
