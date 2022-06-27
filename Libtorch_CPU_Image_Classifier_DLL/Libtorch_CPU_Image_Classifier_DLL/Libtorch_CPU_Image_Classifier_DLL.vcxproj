@@ -153,6 +153,10 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>G:\Projects\C++_Projects\Dependencies\opencv\build\x64\vc15\lib\*;G:\Projects\C++_Projects\Dependencies\libtorch-win-shared-with-deps-1.11.0+cpu\libtorch\lib\c10.lib;G:\Projects\C++_Projects\Dependencies\libtorch-win-shared-with-deps-1.11.0+cpu\libtorch\lib\torch.lib;G:\Projects\C++_Projects\Dependencies\libtorch-win-shared-with-deps-1.11.0+cpu\libtorch\lib\torch_cpu.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy G:\Projects\C++_Projects\Dependencies\opencv\build\x64\vc15\bin\opencv_world452.dll $(SolutionDir)$(Platform)\$(Configuration)\ /c /y
+xcopy G:\Projects\C++_Projects\Dependencies\libtorch-win-shared-with-deps-1.11.0+cpu\libtorch\lib\*.dll $(SolutionDir)$(Platform)\$(Configuration)\ /c /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
