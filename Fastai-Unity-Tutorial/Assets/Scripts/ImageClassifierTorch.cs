@@ -105,13 +105,10 @@ public class ImageClassifierTorch : MonoBehaviour
     const string dll = "Libtorch_CPU_Image_Classifier_DLL";
 
     [DllImport(dll)]
-    private static extern void SetInputDims(int width, int height);
-
-    [DllImport(dll)]
     private static extern int LoadModel(string model, float[] mean, float[] std);
 
     [DllImport(dll)]
-    private static extern int PerformInference(IntPtr inputData);
+    private static extern int PerformInference(IntPtr inputData, int width, int height);
 
     
 
@@ -357,7 +354,7 @@ public class ImageClassifierTorch : MonoBehaviour
     /// </summary>
     /// <param name="inputData"></param>
     /// <returns></returns>
-    public unsafe int UploadTexture(byte[] inputData)
+    public unsafe int UploadTexture(byte[] inputData, Vector2Int inputDims)
     {
         int classIndex = -1;
 
@@ -365,7 +362,7 @@ public class ImageClassifierTorch : MonoBehaviour
         fixed (byte* p = inputData)
         {
             // Perform inference
-            classIndex = PerformInference((IntPtr)p);
+            classIndex = PerformInference((IntPtr)p, inputDims.x, inputDims.y);
         }
 
         return classIndex;
@@ -407,8 +404,7 @@ public class ImageClassifierTorch : MonoBehaviour
         // Scale the source image resolution
         Vector2Int inputDims = CalculateInputDims(screenDims, targetDim);
         if (printDebugMessages) Debug.Log($"Input Dims: {inputDims.x} x {inputDims.y}");
-        SetInputDims(inputDims.x, inputDims.y);
-
+        
         // Initialize the input texture with the calculated input dimensions
         inputTextureGPU = RenderTexture.GetTemporary(inputDims.x, inputDims.y, 24, RenderTextureFormat.ARGBHalf);
 
@@ -439,7 +435,7 @@ public class ImageClassifierTorch : MonoBehaviour
         }
 
         // Send reference to inputData to DLL
-        classIndex = UploadTexture(inputTextureCPU.GetRawTextureData());
+        classIndex = UploadTexture(inputTextureCPU.GetRawTextureData(), inputDims);
         if (printDebugMessages) Debug.Log($"Class Index: {classIndex}");
 
         // Check if index is valid
