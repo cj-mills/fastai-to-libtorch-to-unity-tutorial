@@ -28,11 +28,14 @@ extern "C" {
 		try {
 			// Deserialize the ScriptModule from a file using torch::jit::load().
 			network = torch::jit::load(modelPath);
+			// Set model in evaluation mode
 			network.eval();
 
+			// Empty the normalization vectors
 			mean_stats.clear();
 			std_stats.clear();
 
+			// Update the normalization vectors
 			for (int i = 0; i < 3; i++) {
 				mean_stats.push_back(mean[i]);
 				std_stats.push_back(std[i]);
@@ -55,40 +58,39 @@ extern "C" {
 		// Empty the inputs vector
 		inputs.clear();
 
-		{
-			// Enable inference mode
-			torch::InferenceMode guard(true);
+		// Enable inference mode
+		torch::InferenceMode guard(true);
 
-			// Store the pixel data for the source input image
-			cv::Mat texture = cv::Mat(height, width, CV_8UC4);
+		// Store the pixel data for the source input image
+		cv::Mat texture = cv::Mat(height, width, CV_8UC4);
 
-			if (!texture.isContinuous()) { texture = texture.clone(); }
+		if (!texture.isContinuous()) { texture = texture.clone(); }
 
-			// Assign the inputData to the OpenCV Mat
-			texture.data = inputData;
-			// Remove the alpha channel
-			cv::cvtColor(texture, texture, cv::COLOR_RGBA2RGB);
-			// Convert RGB image to a three-channel matrix of 32-bit floats
-			texture.convertTo(texture, CV_32FC3);
+		// Assign the inputData to the OpenCV Mat
+		texture.data = inputData;
+		// Remove the alpha channel
+		cv::cvtColor(texture, texture, cv::COLOR_RGBA2RGB);
+		// Convert RGB image to a three-channel matrix of 32-bit floats
+		texture.convertTo(texture, CV_32FC3);
 
-			// Initialize a tensor using the texture data
-			torch::Tensor input = torch::from_blob(texture.data, { 1, height, width, 3 });
-			// Permute tensor dimensions
-			input = input.permute({ 0, 3, 1, 2 });
-			// Scale and normalize color channel values
-			input[0][0] = input[0][0].div_(255.0f).sub_(mean_stats[0]).div_(std_stats[0]);
-			input[0][1] = input[0][1].div_(255.0f).sub_(mean_stats[1]).div_(std_stats[1]);
-			input[0][2] = input[0][2].div_(255.0f).sub_(mean_stats[2]).div_(std_stats[2]);
-			// Add input tensor to inputs vector
-			inputs.push_back(input);
-			
-			try {
-				// Perform inference and extract the predicted class index
-				class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
-			}
-			catch (...) {
-				class_idx = -2;
-			}
+		// Initialize a tensor using the texture data
+		torch::Tensor input = torch::from_blob(texture.data, { 1, height, width, 3 });
+		// Permute tensor dimensions
+		input = input.permute({ 0, 3, 1, 2 });
+		// Scale and normalize color channel values
+		input[0][0] = input[0][0].div_(255.0f).sub_(mean_stats[0]).div_(std_stats[0]);
+		input[0][1] = input[0][1].div_(255.0f).sub_(mean_stats[1]).div_(std_stats[1]);
+		input[0][2] = input[0][2].div_(255.0f).sub_(mean_stats[2]).div_(std_stats[2]);
+		// Add input tensor to inputs vector
+		inputs.push_back(input);
+
+		try {
+			// Perform inference and extract the predicted class index
+			class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
+		}
+		catch (...) {
+			// Return a value of -2 if an error occurs during the forward pass
+			class_idx = -2;
 		}
 
 		return class_idx;
