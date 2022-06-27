@@ -12,10 +12,6 @@
 // Wrap code to prevent name-mangling issues
 extern "C" {
 
-	// The input width for the model
-	int input_w = 216;
-	// The input height for the model
-	int input_h = 216;
 	// The current torchscript model
 	torch::jit::Module network;
 	// The current list of inputs
@@ -25,12 +21,6 @@ extern "C" {
 	std::vector<float> mean_stats;
 	// The std normalization stats for the current model
 	std::vector<float> std_stats;
-
-	// Update the input dimensions
-	DLLExport void SetInputDims(int width, int height) {
-		input_w = width;
-		input_h = height;
-	}
 
 	// Load a torchscript model from the specified file path
 	DLLExport int LoadModel(char* modelPath, float mean[3], float std[3]) {
@@ -58,7 +48,7 @@ extern "C" {
 	}
 
 	// Perform inference with the provided texture data
-	DLLExport int PerformInference(uchar* inputData) {
+	DLLExport int PerformInference(uchar* inputData, int width, int height) {
 		
 		// Initialize predicted class index to an invalid value
 		int class_idx = -1;
@@ -70,7 +60,7 @@ extern "C" {
 			torch::InferenceMode guard(true);
 
 			// Store the pixel data for the source input image
-			cv::Mat texture = cv::Mat(input_h, input_w, CV_8UC4);
+			cv::Mat texture = cv::Mat(height, width, CV_8UC4);
 
 			if (!texture.isContinuous()) { texture = texture.clone(); }
 
@@ -82,7 +72,7 @@ extern "C" {
 			texture.convertTo(texture, CV_32FC3);
 
 			// Initialize a tensor using the texture data
-			torch::Tensor input = torch::from_blob(texture.data, { 1, input_h, input_w, 3 });
+			torch::Tensor input = torch::from_blob(texture.data, { 1, height, width, 3 });
 			// Permute tensor dimensions
 			input = input.permute({ 0, 3, 1, 2 });
 			// Scale and normalize color channel values
