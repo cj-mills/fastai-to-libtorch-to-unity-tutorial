@@ -1,7 +1,6 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include <vector>
-#include <torch/torch.h>
 #include <torch/script.h>
 #include <opencv2/opencv.hpp>
 
