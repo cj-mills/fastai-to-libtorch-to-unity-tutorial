@@ -3,7 +3,7 @@ This follow-up to the [fastai-to-unity](https://github.com/cj-mills/fastai-to-un
 
 ## Training Code
 
-| GitHub Repository                                            | Colab                                                        | Kaggle                                                       |
+| GitHub Repository                                            | Colab                                                        | &nbsp;&nbsp;Kaggle&nbsp;&nbsp;                                                       |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [Jupyter Notebook](https://github.com/cj-mills/fastai-to-libtorch-to-unity-tutorial/blob/main/notebooks/Fastai-timm-to-Torchscript-Tutorial.ipynb) | [<img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"  />](https://colab.research.google.com/github/cj-mills/fastai-to-libtorch-to-unity-tutorial/blob/main/notebooks/Fastai-timm-to-Torchscript-Tutorial.ipynb) | [<img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Kaggle"  />](https://kaggle.com/kernels/welcome?src=https://github.com/cj-mills/fastai-to-libtorch-to-unity-tutorial/blob/main/notebooks/Fastai-timm-to-Torchscript-Tutorial.ipynb) |
 
