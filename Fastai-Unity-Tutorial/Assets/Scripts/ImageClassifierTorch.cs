@@ -93,9 +93,9 @@ public class ImageClassifierTorch : MonoBehaviour
     // Controls when the frame rate value updates
     private float fpsTimer = 0f;
 
-    // File paths for the torchscript models
+    // File paths for the available torchscript models
     private List<string> modelPaths = new List<string>();
-    // Names of the torchscript model
+    // Names of the available torchscript models
     private List<string> modelNames = new List<string>();
 
     // A class for reading in normalization stats from a JSON file
@@ -195,7 +195,7 @@ public class ImageClassifierTorch : MonoBehaviour
 
         // Remove default dropdown options
         modelDropdown.ClearOptions();
-        // Add OpenVINO models to menu
+        // Add TorchScript model names to menu
         modelDropdown.AddOptions(modelNames);
         // Select the first option in the dropdown
         modelDropdown.SetValueWithoutNotify(0);
