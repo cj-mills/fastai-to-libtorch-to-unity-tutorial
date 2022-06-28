@@ -356,7 +356,7 @@ public class ImageClassifierTorch : MonoBehaviour
         //Pin Memory
         fixed (byte* p = inputData)
         {
-            // Perform inference
+            // Perform inference and get the predicted class index
             classIndex = PerformInference((IntPtr)p, inputDims.x, inputDims.y);
         }
 
