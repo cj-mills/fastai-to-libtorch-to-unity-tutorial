@@ -1289,7 +1289,7 @@ MonoBehaviour:
   useWebcamToggle: {fileID: 8870819754565200065}
   webcamDropdown: {fileID: 1408103628409930432}
   modelDropdown: {fileID: 354894624}
-  modelsDir: models
+  libtorchDir: LibTorch
   normalizationStatsList:
   - {fileID: 4900000, guid: ab761740a7929924ab2cbb06ec0e5801, type: 3}
   - {fileID: 4900000, guid: 16b1f6ed00bbc3041af94f24d44e4d5a, type: 3}
