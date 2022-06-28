@@ -404,7 +404,6 @@ public class ImageClassifierTorch : MonoBehaviour
 
         if (!inputTextureCPU || inputTextureCPU.width != inputTextureGPU.width)
         {
-            //Destroy(inputTextureCPU);
             inputTextureCPU = new Texture2D(inputDims.x, inputDims.y, TextureFormat.RGBA32, false);
         }
 
