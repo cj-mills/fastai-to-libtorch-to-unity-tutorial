@@ -61,9 +61,7 @@ extern "C" {
 		// Permute tensor dimensions
 		input = input.permute({ 0, 3, 1, 2 });
 		// Scale and normalize color channel values
-		input[0][0] = input[0][0].div_(255.0f).sub_(mean_stats[0]).div_(std_stats[0]);
-		input[0][1] = input[0][1].div_(255.0f).sub_(mean_stats[1]).div_(std_stats[1]);
-		input[0][2] = input[0][2].div_(255.0f).sub_(mean_stats[2]).div_(std_stats[2]);
+		for (int i=0; i < 3; i++) input[0][i].div_(255.0f).sub_(mean_stats[i]).div_(std_stats[i]);
 		
 		// Initialize a vector to store model inputs
 		std::vector<torch::jit::IValue> inputs;
