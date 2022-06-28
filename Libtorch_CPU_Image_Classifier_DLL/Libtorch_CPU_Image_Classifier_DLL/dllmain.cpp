@@ -72,7 +72,7 @@ extern "C" {
 		int class_idx = -1;
 
 		try {
-			// Enable inference mode
+			// Enable inference mode for improved performance
 			torch::InferenceMode guard(true);
 			// Perform inference and extract the predicted class index
 			class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
