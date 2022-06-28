@@ -344,20 +344,19 @@ public class ImageClassifierTorch : MonoBehaviour
 
 
     /// <summary>
-    /// Pin memory for the input data and send it to the plugin for inference
+    /// Pin memory for the input data and pass a reference to the plugin for inference
     /// </summary>
-    /// <param name="inputData">The raw input texture data</param>
-    /// <param name="inputDims">The dimensions of the input texture</param>
+    /// <param name="texture">The input texture</param>
     /// <returns></returns>
-    public unsafe int UploadTexture(byte[] inputData, Vector2Int inputDims)
+    public unsafe int UploadTexture(Texture2D texture)
     {
         int classIndex = -1;
 
         //Pin Memory
-        fixed (byte* p = inputData)
+        fixed (byte* p = texture.GetRawTextureData())
         {
             // Perform inference and get the predicted class index
-            classIndex = PerformInference((IntPtr)p, inputDims.x, inputDims.y);
+            classIndex = PerformInference((IntPtr)p, texture.width, texture.height);
         }
 
         return classIndex;
@@ -430,7 +429,7 @@ public class ImageClassifierTorch : MonoBehaviour
         }
 
         // Send reference to inputData to DLL
-        classIndex = UploadTexture(inputTextureCPU.GetRawTextureData(), inputDims);
+        classIndex = UploadTexture(inputTextureCPU);
         if (printDebugMessages) Debug.Log($"Class Index: {classIndex}");
 
         // Check if index is valid
