@@ -59,7 +59,7 @@ public class ImageClassifierTorch : MonoBehaviour
 
     [Header("Libtorch")]
     [Tooltip("The name of the libtorch models folder")]
-    public string modelsDir = "models";
+    public string torchscriptModulesDir = "TorchScriptModules";
     [Tooltip("A list json files containing the normalization stats for available models")]
     public TextAsset[] normalizationStatsList;
 
@@ -167,7 +167,7 @@ public class ImageClassifierTorch : MonoBehaviour
     private void GetTorchModels()
     {
         // Get the paths for the .pt file for each model
-        foreach (string file in System.IO.Directory.GetFiles($"{Application.streamingAssetsPath}/{modelsDir}"))
+        foreach (string file in System.IO.Directory.GetFiles($"{Application.streamingAssetsPath}/{torchscriptModulesDir}"))
         {
             if (file.EndsWith(".pt"))
             {
