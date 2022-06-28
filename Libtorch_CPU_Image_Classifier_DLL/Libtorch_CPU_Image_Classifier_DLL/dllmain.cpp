@@ -1,9 +1,5 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
-// One-stop LibTorch header
-#include <torch/script.h>
-// One-stop OpenCV header
-#include <opencv2/opencv.hpp>
 
 
 // Create a macro to quickly mark a function for export
