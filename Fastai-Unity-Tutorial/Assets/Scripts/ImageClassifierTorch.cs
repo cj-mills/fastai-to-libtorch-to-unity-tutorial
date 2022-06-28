@@ -111,8 +111,6 @@ public class ImageClassifierTorch : MonoBehaviour
     private static extern int PerformInference(IntPtr inputData, int width, int height);
 
     
-
-
     /// <summary>
     /// Initialize the selected webcam device
     /// </summary>
@@ -280,8 +278,6 @@ public class ImageClassifierTorch : MonoBehaviour
         computeShader.SetTexture(kernelHandle, "Result", result);
         // Set the value for the InputImage variable in the ComputeShader
         computeShader.SetTexture(kernelHandle, "InputImage", image);
-        // Set the value for the height variable in the ComputeShader
-        computeShader.SetInt("height", image.height);
 
         // Execute the ComputeShader
         computeShader.Dispatch(kernelHandle, result.width / numthreads, result.height / numthreads, 1);
@@ -350,7 +346,8 @@ public class ImageClassifierTorch : MonoBehaviour
     /// <summary>
     /// Pin memory for the input data and send it to the plugin for inference
     /// </summary>
-    /// <param name="inputData"></param>
+    /// <param name="inputData">The raw input texture data</param>
+    /// <param name="inputDims">The dimensions of the input texture</param>
     /// <returns></returns>
     public unsafe int UploadTexture(byte[] inputData, Vector2Int inputDims)
     {
