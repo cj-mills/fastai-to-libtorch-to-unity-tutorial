@@ -14,9 +14,7 @@ extern "C" {
 
 	// The current torchscript model
 	torch::jit::Module network;
-	// The current list of inputs
-	std::vector<torch::jit::IValue> inputs;
-
+	
 	// The mean normalization stats for the current model
 	std::vector<float> mean_stats;
 	// The std normalization stats for the current model
@@ -28,9 +26,7 @@ extern "C" {
 		try {
 			// Deserialize the ScriptModule from a file using torch::jit::load().
 			network = torch::jit::load(modelPath);
-			// Set model in evaluation mode
-			network.eval();
-
+			
 			// Empty the normalization vectors
 			mean_stats.clear();
 			std_stats.clear();
@@ -53,21 +49,8 @@ extern "C" {
 	// Perform inference with the provided texture data
 	DLLExport int PerformInference(uchar* inputData, int width, int height) {
 		
-		// Initialize predicted class index to an invalid value
-		int class_idx = -1;
-		// Empty the inputs vector
-		inputs.clear();
-
-		// Enable inference mode
-		torch::InferenceMode guard(true);
-
-		// Store the pixel data for the source input image
-		cv::Mat texture = cv::Mat(height, width, CV_8UC4);
-
-		if (!texture.isContinuous()) { texture = texture.clone(); }
-
-		// Assign the inputData to the OpenCV Mat
-		texture.data = inputData;
+		// Store the pixel data for the source input image in an OpenCV Mat
+		cv::Mat texture = cv::Mat(height, width, CV_8UC4, inputData);
 		// Remove the alpha channel
 		cv::cvtColor(texture, texture, cv::COLOR_RGBA2RGB);
 		// Convert RGB image to a three-channel matrix of 32-bit floats
@@ -81,10 +64,18 @@ extern "C" {
 		input[0][0] = input[0][0].div_(255.0f).sub_(mean_stats[0]).div_(std_stats[0]);
 		input[0][1] = input[0][1].div_(255.0f).sub_(mean_stats[1]).div_(std_stats[1]);
 		input[0][2] = input[0][2].div_(255.0f).sub_(mean_stats[2]).div_(std_stats[2]);
+		
+		// Initialize a vector to store model inputs
+		std::vector<torch::jit::IValue> inputs;
 		// Add input tensor to inputs vector
 		inputs.push_back(input);
 
+		// Initialize predicted class index to an invalid value
+		int class_idx = -1;
+
 		try {
+			// Enable inference mode
+			torch::InferenceMode guard(true);
 			// Perform inference and extract the predicted class index
 			class_idx = torch::softmax(network.forward(inputs).toTensor(), 1).argmax().item<int>();
 		}
