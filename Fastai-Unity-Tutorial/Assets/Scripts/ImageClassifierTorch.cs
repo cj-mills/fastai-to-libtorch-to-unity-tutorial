@@ -282,8 +282,6 @@ public class ImageClassifierTorch : MonoBehaviour
         computeShader.SetTexture(kernelHandle, "InputImage", image);
         // Set the value for the height variable in the ComputeShader
         computeShader.SetInt("height", image.height);
-        // Set the value for the width variable in the ComputeShader
-        computeShader.SetInt("width", image.width);
 
         // Execute the ComputeShader
         computeShader.Dispatch(kernelHandle, result.width / numthreads, result.height / numthreads, 1);
