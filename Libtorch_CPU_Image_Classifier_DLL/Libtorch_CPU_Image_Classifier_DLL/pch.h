@@ -9,5 +9,9 @@
 
 // add headers that you want to pre-compile here
 //#include "framework.h"
+// One-stop LibTorch header
+#include <torch/script.h>
+// One-stop OpenCV header
+#include <opencv2/opencv.hpp>
 
 #endif //PCH_H
