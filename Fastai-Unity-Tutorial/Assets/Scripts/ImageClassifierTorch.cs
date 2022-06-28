@@ -479,7 +479,7 @@ public class ImageClassifierTorch : MonoBehaviour
 
         foreach (TextAsset textAsset in normalizationStatsList)
         {
-            if (textAsset.name.Contains(modelName))
+            if (modelName.Contains(textAsset.name.Split("-")[0]))
             {
                 // Initialize the normalization stats from JSON file
                 mean = JsonUtility.FromJson<NormalizationStats>(textAsset.text).mean;
