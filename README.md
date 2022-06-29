@@ -2,8 +2,7 @@
 This follow-up to the [fastai-to-unity](https://github.com/cj-mills/fastai-to-unity-tutorial) tutorial covers creating a [LibTorch](https://pytorch.org/cppdocs/installing.html) plugin for the [Unity](https://unity.com/) game engine.
 
 
-
-https://user-images.githubusercontent.com/9126128/176332167-65c07fb6-749b-477b-a518-b6a50213b63c.mp4
+https://user-images.githubusercontent.com/9126128/176336591-3034062c-989b-4330-82e5-9e4bcb8035e3.mp4
 
 
 
