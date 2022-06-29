@@ -1285,11 +1285,11 @@ MonoBehaviour:
   displayFPS: 1
   textColor: {r: 1, g: 0, b: 0, a: 1}
   fontScale: 50
-  fpsRefreshRate: 0.1
+  fpsRefreshRate: 0.25
   useWebcamToggle: {fileID: 8870819754565200065}
   webcamDropdown: {fileID: 1408103628409930432}
   modelDropdown: {fileID: 354894624}
-  libtorchDir: LibTorch
+  torchscriptModulesDir: TorchScriptModules
   normalizationStatsList:
   - {fileID: 4900000, guid: ab761740a7929924ab2cbb06ec0e5801, type: 3}
   - {fileID: 4900000, guid: 16b1f6ed00bbc3041af94f24d44e4d5a, type: 3}
