@@ -1,6 +1,12 @@
 # Fastai to LibTorch to Unity tutorial
 This follow-up to the [fastai-to-unity](https://github.com/cj-mills/fastai-to-unity-tutorial) tutorial covers creating a [LibTorch](https://pytorch.org/cppdocs/installing.html) plugin for the [Unity](https://unity.com/) game engine.
 
+
+
+https://user-images.githubusercontent.com/9126128/176332167-65c07fb6-749b-477b-a518-b6a50213b63c.mp4
+
+
+
 ## Training Code
 
 | GitHub Repository                                            | Colab                                                        | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kaggle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                       |
