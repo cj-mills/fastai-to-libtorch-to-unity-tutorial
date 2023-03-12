@@ -6,6 +6,9 @@
 * [Part 3](https://christianjmills.com/posts/fastai-libtorch-unity-tutorial/part-3/): Modify the Unity project from the [fastai-to-unity tutorial](https://christianjmills.com/posts/fastai-to-unity-tutorial/part-1/) to classify images with [LibTorch](https://pytorch.org/cppdocs/installing.html).
 
 
+## Important
+Must decompress the [Fastai-Unity-Tutorial/Assets/Plugins.zip](https://github.com/cj-mills/fastai-to-libtorch-to-unity-tutorial/blob/main/Fastai-Unity-Tutorial/Assets/Plugins.zip) zip file before running the Unity project.
+
 
 ## Demo Video
 https://user-images.githubusercontent.com/9126128/176336591-3034062c-989b-4330-82e5-9e4bcb8035e3.mp4
